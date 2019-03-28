@@ -8,7 +8,7 @@ import java.net.*;
 
 public class Client extends JFrame
 { 
-	final static int ServerPort = 2004; 
+	final static int ServerPort = 2000; 
 	InetAddress target_ip;
 	int target_port;
 	InetAddress ip;
@@ -30,7 +30,7 @@ public class Client extends JFrame
 		
 		try
 		{
-			ip = InetAddress.getByName("10.145.246.62"); 
+			ip = InetAddress.getByName("localhost"); 
 			System.out.println(ip);
 		}
 		catch
