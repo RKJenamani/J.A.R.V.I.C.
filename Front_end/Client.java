@@ -8,7 +8,7 @@ import java.net.*;
 
 public class Client extends JFrame
 { 
-	final static int ServerPort = 2000; 
+	final static int ServerPort = 2003; 
 	InetAddress target_ip;
 	int target_port;
 	InetAddress ip;
