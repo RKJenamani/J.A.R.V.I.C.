@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">JARVIC</string>
+    <!--<string name="app_name">Scaledrone chat</string>-->
+    <string name="input_placeholder">Write a message</string>
+    <string name="toolbar_sign_out">Logout</string>
+    <string name="toolbar_clear_chat">Clear chat</string>
+</resources>
