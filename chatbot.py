@@ -1,9 +1,13 @@
 import socket 
 import struct 
-from thread import *
+from _thread import *
 import threading  
 from authenticate import authentication 
 from history import chat_history
+from pender_chatbot.response_generator import response
+
+import sys
+import argparse
 
 class chatbot:
 
@@ -30,21 +34,22 @@ class chatbot:
 	def receive_msg(self): 
 		data = self.c.recv(1024) 
 		if not data: 
-			print('Bye')  
+			# print('Bye')  
 			return "N"
 		data = data[2:]
 		return data.decode()
 
 	def close_port(self):
-		self.s.close() 
+		self.s.close()
 
-if __name__ == '__main__':
-	jarvic = chatbot()
+def chat_session(chat_replies,args):
+	jarvic=chatbot()
 	user_auth = authentication()
 	hist = chat_history()
 	login_true=0
 	while(login_true==0):
 		msg=jarvic.receive_msg()
+		if not msg: return 0
 		values=msg.split('$')
 		print(values)
 		if(len(values)==2): 
@@ -59,5 +64,37 @@ if __name__ == '__main__':
 			jarvic.send_msg("y")
 
 	jarvic.send_msg(hist.load_history(values[0]))
-
+	# print("IN SESSION")
+	while(True):
+		msg=jarvic.receive_msg()
+		# print("Message recievd :",msg)
+		if (msg=="N"): 
+			# print("returning")
+			break
+		# print("iteration")
+		jarvic.send_msg(chat_replies.chat(msg))
 	jarvic.close_port()
+
+
+if __name__ == '__main__':
+
+	assert sys.version_info >= (3, 3), \
+	"Must be run in Python 3.3 or later. You are running {}".format(sys.version)
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--save_dir', type=str, default='pender_chatbot/models/reddit',
+					   help='model directory to store checkpointed models')
+	parser.add_argument('-n', type=int, default=500)
+	parser.add_argument('--prime', type=str, default=' ')
+	parser.add_argument('--beam_width', type=int, default=2)
+	parser.add_argument('--temperature', type=float, default=1.0)
+	parser.add_argument('--topn', type=int, default=-1)
+	parser.add_argument('--relevance', type=float, default=-1.)
+	args = parser.parse_args()
+
+	
+	chat_replies=response(args)
+
+	while(True):
+		chat_session(chat_replies,args)
+	chat_replies.close_sess()
+	

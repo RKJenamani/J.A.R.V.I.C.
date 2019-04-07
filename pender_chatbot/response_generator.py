@@ -10,8 +10,12 @@ import copy
 import sys
 import html
 
-from utils import TextLoader
-from model import Model
+from io import StringIO
+
+from pender_chatbot.utils import TextLoader
+from pender_chatbot.model import Model
+# from utils import TextLoader
+# from model import Model
 
 class response:
 
@@ -52,6 +56,7 @@ class response:
 
 	def chat(self,user_input):
 		print("INCHAT\n")
+		output = StringIO()
 		user_command_entered, reset, self.states, self.relevance, self.temperature, self.stopn, self.beam_width = self.process_user_command(
 			user_input, self.states, self.relevance, self.temperature, self.topn, self.beam_width)
 		if reset: self.states = self.initial_state_with_relevance_masking(self.net, self.sess, self.srelevance)
@@ -65,10 +70,11 @@ class response:
 			out_chars = []
 			for i, char_token in enumerate(computer_response_generator):
 				out_chars.append(self.chars[char_token])
-				print(self.possibly_escaped_char(out_chars), end='', flush=True)
+				output.write(self.possibly_escaped_char(out_chars))
 				self.states = self.forward_text(self.net, self.sess, self.states, self.relevance, self.vocab, self.chars[char_token])
 				if i >= self.max_length: break
 			self.sstates = self.forward_text(self.net, self.sess, self.states, self.relevance, self.vocab, self.sanitize_text(self.vocab, "\n> "))
+		return output.getvalue()
 
 
 	def get_paths(self,input_path):
@@ -313,7 +319,7 @@ if __name__ == '__main__':
 	while(True):
 		print("INLOOP\n")
 		user_input=input("Enter message :")
-		jarvic.chat(user_input)
+		print(jarvic.chat(user_input))
 	jarvic.close_sess()
 
 
