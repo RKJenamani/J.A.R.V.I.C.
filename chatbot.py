@@ -24,8 +24,8 @@ class chatbot:
 
 	def send_msg(self,msg):
 
-		if msg is "\n" :
-			print("ERROR")
+		if msg is "\n" : 
+			print("ERROR")  
 		# msg = msg + "\n"
 		msg = msg.encode("utf-8", 'ignore')
 		self.c.send(struct.pack("!H", len(msg)))
@@ -46,7 +46,7 @@ def chat_session(chat_replies,args):
 	jarvic=chatbot()
 	user_auth = authentication()
 	hist = chat_history()
-	login_true=0
+	login_true=0  #Set this to zero11
 	while(login_true==0):
 		msg=jarvic.receive_msg()
 		if not msg: return 0
@@ -74,8 +74,7 @@ def chat_session(chat_replies,args):
 		# print("iteration")
 		jarvic.send_msg(chat_replies.chat(msg))
 	jarvic.close_port()
-
-
+	
 if __name__ == '__main__':
 
 	assert sys.version_info >= (3, 3), \
