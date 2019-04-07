@@ -1,3 +1,4 @@
+#Rajat baap hain !! 
 import socket 
 import struct 
 from thread import *
@@ -20,8 +21,8 @@ class chatbot:
 
 	def send_msg(self,msg):
 
-		if msg is "\n" :
-			print("ERROR")
+		if msg is "\n" :  ##If message is new line
+			print("ERROR")  ####Bhosdike !!! Deepank kya kiya tune???
 		# msg = msg + "\n"
 		msg = msg.encode("utf-8", 'ignore')
 		self.c.send(struct.pack("!H", len(msg)))
@@ -42,7 +43,7 @@ if __name__ == '__main__':
 	jarvic = chatbot()
 	user_auth = authentication()
 	hist = chat_history()
-	login_true=0
+	login_true=0  #Set this to zero11
 	while(login_true==0):
 		msg=jarvic.receive_msg()
 		values=msg.split('$')
@@ -61,3 +62,4 @@ if __name__ == '__main__':
 	jarvic.send_msg(hist.load_history(values[0]))
 
 	jarvic.close_port()
+	#also do rajat.logout()
