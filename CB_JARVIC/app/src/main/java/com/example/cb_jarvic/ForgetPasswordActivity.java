@@ -1,86 +1,41 @@
 package com.example.cb_jarvic;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.*;
-import java.io.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable{
-    private transient Button b1,b2;
-    private transient EditText ed1,ed2;
-    private transient TextView tv1, tv2;
+public class ForgetPasswordActivity extends Activity {
+    private transient Button b1;
+    private transient EditText ed1, ed2, ed3;
+    private transient TextView tv1;
     private InetAddress ip;
     private int port;
     private transient DataInputStream dis;
     private transient DataOutputStream dos;
-    private socket_pass socket;
+    private MainActivity.socket_pass socket;
     private transient Socket s;
 
-
-    public static class socket_pass implements Serializable{
-        public transient Socket s;
-        public InetAddress hostname;
-        public int port;
-
-        public void get_socket(Socket s, InetAddress host, int port)
-        {
-            this.s = s;
-            this.hostname = hostname;
-            this.port = port;
-        }
-        public Socket return_socket()
-        {
-            return this.s;
-        }
-    }
-
-    public static class ObjectWrapperForBinder extends Binder {
-
-        private final socket_pass mData;
-
-        public ObjectWrapperForBinder(socket_pass data) {
-            mData = data;
-        }
-
-        public socket_pass getData() {
-            return mData;
-        }
-    }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        myToolbar.showOverflowMenu();
-        getSupportActionBar().setTitle("");
+        setContentView(R.layout.activity_forgetpassword);
 
         Intent i = getIntent();
-        if(i.getExtras() != null) {
+        if (i.getExtras() != null) {
             try {
                 socket = ((MainActivity.ObjectWrapperForBinder) i.getExtras().getBinder("socket_value")).getData();
                 ip = socket.hostname;
@@ -94,28 +49,30 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 e.printStackTrace();
             }
         }
-        b1 = (Button)findViewById(R.id.button);
-        ed1 = (EditText)findViewById(R.id.editText5);
-        ed2 = (EditText)findViewById(R.id.editText6);
-        tv1 = (TextView) findViewById(R.id.textView3);
-        tv2 = (TextView) findViewById(R.id.textView4);
+
+        b1 = (Button) findViewById(R.id.button2);
+        ed1 = (EditText) findViewById(R.id.editText8);
+        ed2 = (EditText) findViewById(R.id.editText10);
+        ed3 = (EditText) findViewById(R.id.editText9);
+        tv1 = (TextView) findViewById(R.id.textView7);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 try {
                     if (!ed1.getText().toString().equals("") &&
-                            !ed2.getText().toString().equals("")) {
-                        connectToServer(ed1.getText().toString(), ed2.getText().toString());
+                            !ed2.getText().toString().equals("") && !ed3.getText().toString().equals("")) {
+                        connectToServer(ed1.getText().toString(), ed2.getText().toString(), ed3.getText().toString());
                     } else {
-                        if(ed1.getText().toString().equals(""))
-                            ed1.setError("Incorrect Email address");
-                        if(ed2.getText().toString().equals(""))
-                            ed2.setError("Incorrect Password");
-                        Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();
+                        if (ed1.getText().toString().equals(""))
+                            ed1.setError("Enter Email address");
+                        if (ed2.getText().toString().equals(""))
+                            ed2.setError("Enter contact number");
+                        if (ed3.getText().toString().equals(""))
+                            ed3.setError("Enter Password");
+                        Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -128,29 +85,16 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 socket.get_socket(s, ip, port);
                 final Bundle bundle = new Bundle();
-                bundle.putBinder("socket_value", new ObjectWrapperForBinder(socket));
+                bundle.putBinder("socket_value", new MainActivity.ObjectWrapperForBinder(socket));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
             }
         });
 
-        tv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getApplicationContext(), ForgetPasswordActivity.class);
-                socket.get_socket(s, ip, port);
-                final Bundle bundle = new Bundle();
-                bundle.putBinder("socket_value", new ObjectWrapperForBinder(socket));
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
-    public void connectToServer(final String email, final String password) throws Exception
+    public void connectToServer(final String email, final String contact, final String password) throws Exception
     {
         try {
             new Thread(new Runnable() {
@@ -163,18 +107,18 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                             dos = new DataOutputStream(s.getOutputStream());
                             dis = new DataInputStream(s.getInputStream());
                         }
-                        socket = new socket_pass();
+                        socket = new MainActivity.socket_pass();
                         socket.get_socket(s, ip, port);
-                        String send = email + "$" + password;
+                        String send = email + "$" + contact + "$" + password;
                         dos.writeUTF(send);
                         System.out.println(send);
-//                        String success="y";
+
                         String success = dis.readUTF();
                         System.out.println("\nJ.A.R.V.I.C. - " + success);
                         if(success.equals("y")) {
                             final Bundle bundle = new Bundle();
-                            bundle.putBinder("socket_value", new ObjectWrapperForBinder(socket));
-                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                            bundle.putBinder("socket_value", new MainActivity.ObjectWrapperForBinder(socket));
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
@@ -188,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                             });
                             final Bundle bundle = new Bundle();
                             bundle.putBinder("socket_value", new MainActivity.ObjectWrapperForBinder(socket));
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), ForgetPasswordActivity.class);
                             intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
@@ -208,37 +152,11 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings: {
-                try {
-                    if(s != null)
-                        s.close();
-                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
-        return true;
-    }
-
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exitByBackKey();
+
+            //moveTaskToBack(false);
 
             return true;
         }
@@ -248,12 +166,18 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     protected void exitByBackKey() {
 
         AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit application?")
+                .setMessage("Do you want to go back to login?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
-
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        if (s != null) {
+                            final Bundle bundle = new Bundle();
+                            bundle.putBinder("socket_value", new MainActivity.ObjectWrapperForBinder(socket));
+                            intent.putExtras(bundle);
+                        }
+                        startActivity(intent);
                         finish();
                     }
                 })
@@ -266,5 +190,4 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 })
                 .show();
     }
-
 }

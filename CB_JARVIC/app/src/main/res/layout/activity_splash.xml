@@ -5,12 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.cb_jarvic.Splash"
-    android:background="@drawable/bg_gradient">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="77dp"
-        android:layout_height="68dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/logo" />
-</RelativeLayout>
+    android:background="@drawable/bg_splash"/>

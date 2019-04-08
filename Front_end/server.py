@@ -30,7 +30,7 @@ def threaded_send(c):
 		if msg is "\n" :
 			print("ERROR")
 			break
-		msg = msg + "\n"
+		# msg = msg + "\n"
 		msg = msg.encode("utf-8", 'ignore')
 		c.send(struct.pack("!H", len(msg)))
 		c.send(msg)
@@ -38,12 +38,12 @@ def threaded_send(c):
 
 
 def Main(): 
-	host = "10.145.246.62" 
+	host = "10.147.148.105" 
 
 	# reverse a port on your computer 
 	# in our case it is 12345 but it 
 	# can be anything 
-	port = 2004 
+	port = int(input("Port ?"))
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 	s.bind((host, port)) 
 	print("socket binded to post", port) 

@@ -3,7 +3,7 @@ import struct
 from _thread import *
 import threading  
 from authenticate import authentication 
-from history import chat_history
+# from history import chat_history
 from pender_chatbot.response_generator import response
 
 import sys
@@ -12,7 +12,7 @@ import argparse
 class chatbot:
 
 	def __init__(self):
-		host = "127.0.0.1" 
+		host = "10.145.12.195" 
 		port = 2003 
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 		self.s.bind((host, port)) 
@@ -62,8 +62,8 @@ def chat_session(chat_replies,args):
 		else:
 			user_auth.signup(values)
 			jarvic.send_msg("y")
-
-	jarvic.send_msg(hist.load_history(values[0]))
+	jarvic.send_msg("u$history")
+	# jarvic.send_msg(hist.load_history(values[0]))
 	# print("IN SESSION")
 	while(True):
 		msg=jarvic.receive_msg()
