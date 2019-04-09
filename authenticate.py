@@ -10,12 +10,12 @@ class authentication():
         name=name.strip('\n')
         username=username.strip('\n')
         password=password.strip('\n')
-        conatct=contact.strip('\n')
+        contact=contact.strip('\n')
         print(" name:",name)
         print(" username:",username)
         print(" password:",password)
         print(" contact:",contact)
-        history="u$hello$s$hi$u$bye$u$seeya"
+        history=""
         mydb = ms.connect(host="localhost",user="root",passwd="rajat",database="JARVIC")
         mc=mydb.cursor()
         sql = ("INSERT INTO USERS(NAME, USERNAME, PASSWORD, CONTACT, HISTORY) VALUES (%s, %s,%s, %s, %s)")

@@ -1,9 +1,9 @@
 import socket 
 import struct 
-from _thread import *
+from thread import *
 import threading  
 from authenticate import authentication 
-# from history import chat_history
+from history import chat_history
 from pender_chatbot.response_generator import response
 
 import sys
@@ -12,7 +12,7 @@ import argparse
 class chatbot:
 
 	def __init__(self):
-		host = "10.145.12.195" 
+		host = "127.0.0.1" 
 		port = 2003 
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 		self.s.bind((host, port)) 
@@ -62,9 +62,11 @@ def chat_session(chat_replies,args):
 		else:
 			user_auth.signup(values)
 			jarvic.send_msg("y")
-	jarvic.send_msg("u$history")
-	# jarvic.send_msg(hist.load_history(values[0]))
-	# print("IN SESSION")
+	# jarvic.send_msg("u$history")
+	user_history=hist.load_history(values[0])
+	if(user_history != None):
+		jarvic.send_msg(user_history)
+	print("IN SESSION")
 	while(True):
 		msg=jarvic.receive_msg()
 		# print("Message recievd :",msg)
@@ -72,7 +74,11 @@ def chat_session(chat_replies,args):
 			# print("returning")
 			break
 		# print("iteration")
-		jarvic.send_msg(chat_replies.chat(msg))
+		hist.add_to_history(values[0],"u",msg)
+		reply=chat_replies.chat(msg)
+		# reply="lolwut"
+		jarvic.send_msg(reply)
+		hist.add_to_history(values[0],"c",reply)
 	jarvic.close_port()
 	
 if __name__ == '__main__':
