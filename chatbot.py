@@ -4,6 +4,7 @@ from thread import *
 import threading  
 from authenticate import authentication 
 from history import chat_history
+from sentiment_analysis import sentiment_analysis
 from pender_chatbot.response_generator import response
 
 import sys
@@ -12,8 +13,8 @@ import argparse
 class chatbot:
 
 	def __init__(self):
-		host = "127.0.0.1" 
-		port = 2003 
+		host = "10.145.55.108" 
+		port = 2005 
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 		self.s.bind((host, port)) 
 		print("socket binded to post", port) 
@@ -37,16 +38,17 @@ class chatbot:
 			# print('Bye')  
 			return "N"
 		data = data[2:]
-		return data.decode()
+		return str(data.decode()).strip('\n')
 
 	def close_port(self):
 		self.s.close()
 
-def chat_session(chat_replies,args):
+def chat_session(chat_replies,emotion_model,args):
+# def chat_session(emotion_model,args):
 	jarvic=chatbot()
 	user_auth = authentication()
 	hist = chat_history()
-	login_true=0  #Set this to zero11
+	login_true=0  
 	while(login_true==0):
 		msg=jarvic.receive_msg()
 		if not msg: return 0
@@ -75,6 +77,13 @@ def chat_session(chat_replies,args):
 			break
 		# print("iteration")
 		hist.add_to_history(values[0],"u",msg)
+		print("msg-",msg,"-")
+		letsee=str(msg)
+		new_msg=msg.strip('\n')
+		print("letsee-",letsee,"-")
+		print("new_msg-",msg,"-")
+		emotion=emotion_model.predict_emotion(new_msg)
+		jarvic.send_msg(emotion)
 		reply=chat_replies.chat(msg)
 		# reply="lolwut"
 		jarvic.send_msg(reply)
@@ -83,8 +92,8 @@ def chat_session(chat_replies,args):
 	
 if __name__ == '__main__':
 
-	assert sys.version_info >= (3, 3), \
-	"Must be run in Python 3.3 or later. You are running {}".format(sys.version)
+	# assert sys.version_info >= (3, 3), \
+	# "Must be run in Python 3.3 or later. You are running {}".format(sys.version)
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--save_dir', type=str, default='pender_chatbot/models/reddit',
 					   help='model directory to store checkpointed models')
@@ -98,8 +107,9 @@ if __name__ == '__main__':
 
 	
 	chat_replies=response(args)
-
+	emotion_model=sentiment_analysis()
 	while(True):
-		chat_session(chat_replies,args)
+		chat_session(chat_replies,emotion_model,args)
+		# chat_session(emotion_model,args)
 	chat_replies.close_sess()
 	

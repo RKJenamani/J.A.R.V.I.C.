@@ -7,12 +7,15 @@ class chat_history:
 		mc=mydb.cursor()
 		mc.execute("SELECT HISTORY FROM USERS WHERE USERNAME = \'"+username+"\'")
 		sql_return = mc.fetchone()
+		print("sql: ",sql_return)
 		if(sql_return==None):
 			return None
 		else:
 			(user_history,) = sql_return
 			if(user_history==""):
 				return None
+			user_history=str(user_history)
+			print("-",user_history,"-")
 			return user_history
 
 	def add_to_history(self,username,who,msg):
@@ -21,14 +24,15 @@ class chat_history:
 		mc=mydb.cursor()
 		mc.execute("SELECT HISTORY FROM USERS WHERE USERNAME = \'"+username+"\'")
 		sql_return = mc.fetchone()
-		
-		if(sql_return==None):
+		(sql_return,) = sql_return
+		print("sql: ",sql_return)
+		if(sql_return==""):
 			if(who=="u"):
 				user_history="u$"+msg
 			else:
 				user_history="c$"+msg
 		else:
-			(user_history,) = sql_return
+			user_history = str(sql_return)
 			if(who=="u"):
 				user_history=user_history+"$u$"+msg
 			else:

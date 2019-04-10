@@ -57,9 +57,9 @@ class sentiment_analysis:
 		input_features = self.vectorizer.transform(self.extract_words(sentences))
 		prediction = self.nb.predict(input_features)
 		if prediction[0] == 1 :
-			output = "positive"
+			output = "calm"
 		else:
-			output = "negative"
+			output = "sad"
 		return output 
 		
 if __name__ == '__main__':
