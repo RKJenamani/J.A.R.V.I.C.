@@ -10,7 +10,7 @@ Create a table for JARVIC using the following commands-
 $mysql -u root -p
 mysql>CREATE DATABASE JARVIC;
 mysql>USE JARVIC;
-mysql>CREATE TABLE USERS (name VARCHAR(100),username VARCHAR(100),password VARCHAR(100),contact VARCHAR(100),history VARCHAR(100));
+mysql>CREATE TABLE USERS (name VARCHAR(100),username VARCHAR(100),password VARCHAR(100),contact VARCHAR(100),history VARCHAR(65000));
 ~~~~
 ### Machine Learning :
 Install tensorflow, numpy, pickle, nltk and sklearn 
