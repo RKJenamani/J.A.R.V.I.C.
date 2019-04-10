@@ -2,8 +2,11 @@ import mysql.connector as ms
 
 class chat_history:
 
+	def __init__(self,password):
+		self.passwd=password
+
 	def load_history(self,username):
-		mydb = ms.connect(host="localhost",user="root",passwd="software",database="JARVIC")
+		mydb = ms.connect(host="localhost",user="root",passwd=self.passwd,database="JARVIC")
 		mc=mydb.cursor()
 		mc.execute("SELECT HISTORY FROM USERS WHERE USERNAME = \'"+username+"\'")
 		sql_return = mc.fetchone()
@@ -20,7 +23,7 @@ class chat_history:
 
 	def add_to_history(self,username,who,msg):
 
-		mydb = ms.connect(host="localhost",user="root",passwd="software",database="JARVIC")
+		mydb = ms.connect(host="localhost",user="root",passwd=self.passwd,database="JARVIC")
 		mc=mydb.cursor()
 		mc.execute("SELECT HISTORY FROM USERS WHERE USERNAME = \'"+username+"\'")
 		sql_return = mc.fetchone()

@@ -46,8 +46,8 @@ class chatbot:
 def chat_session(chat_replies,emotion_model,args):
 # def chat_session(emotion_model,args):
 	jarvic=chatbot(args.host,args.port)
-	user_auth = authentication()
-	hist = chat_history()
+	user_auth = authentication(args.mysqlpass)
+	hist = chat_history(args.mysqlpass)
 	login_true=0  
 	while(login_true==0):
 		msg=jarvic.receive_msg()
@@ -128,6 +128,7 @@ if __name__ == '__main__':
 	parser.add_argument('--relevance', type=float, default=-1.)
 	parser.add_argument('--host', type=str, default='127.0.0.1')
 	parser.add_argument('--port', type=int, default='2000')
+	parser.add_argument('--mysqlpass', type=str, default='software')
 	
 
 	args = parser.parse_args()
