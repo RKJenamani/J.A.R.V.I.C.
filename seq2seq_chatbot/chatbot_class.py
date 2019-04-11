@@ -14,9 +14,10 @@ import itertools
 import math
 import pickle
 
-from model.model import *
-from eval import GreedySearchDecoder, evaluateInput
-from train import trainIters
+from seq2seq_chatbot.preprocessing.utils import loadPrepareData, batch2TrainData
+from seq2seq_chatbot.model.model import *
+from seq2seq_chatbot.eval import GreedySearchDecoder, evaluateInput
+from seq2seq_chatbot.train import trainIters
 
 PAD_token = 0  # Used for padding short sentences
 SOS_token = 1  # Start-of-sentence token
@@ -27,7 +28,7 @@ USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu")
 
 class chatbot:
-    def __init__(self, voc, model_name, corpus_name, att_model='concat', hidden_size=500, encoder_n_layers=2, decoder_n_layers=2, dropout=0.1, batch_size=32, save_dir='models', loadFilename=None, checkpoint_iter=4000):
+    def __init__(self, file_name, model_name, corpus_name, att_model='concat', hidden_size=500, encoder_n_layers=2, decoder_n_layers=2, dropout=0.1, batch_size=32, save_dir='models', loadFilename=None, checkpoint_iter=4000):
         self.model_name = model_name
         self.corpus_name = corpus_name
         self.attn_model = att_model
@@ -36,7 +37,8 @@ class chatbot:
         self.decoder_n_layers = decoder_n_layers
         self.dropout = dropout
         self.batch_size = batch_size
-        self.save_dir = save_dir
+        self.save_dir = save_dir, 
+        self.voc, self.pairs = loadPrepareData("my_data", corpus_name, file_name, "preprocessing/data" )
         # Set checkpoint to load from; set to None if starting from scratch
         self.loadFilename =loadFilename
         self.checkpoint_iter = checkpoint_iter
@@ -63,12 +65,12 @@ class chatbot:
 
         print('Building encoder and decoder ...')
         # Initialize word embeddings
-        self.embedding = nn.Embedding(voc.num_words, hidden_size)
+        self.embedding = nn.Embedding(self.voc.num_words, hidden_size)
         if self.loadFilename:
             self.embedding.load_state_dict(self.embedding_sd)
         # Initialize encoder & decoder models
         self.encoder = Encoder(self.hidden_size, self.embedding, self.encoder_n_layers, self.dropout)
-        self.decoder = Decoder(self.attn_model, self.embedding, self.hidden_size, voc.num_words, self.decoder_n_layers, self.dropout)
+        self.decoder = Decoder(self.attn_model, self.embedding, self.hidden_size, self.voc.num_words, self.decoder_n_layers, self.dropout)
         if self.loadFilename:
             self.encoder.load_state_dict(self.encoder_sd)
             self.decoder.load_state_dict(self.decoder_sd)
@@ -103,5 +105,5 @@ class chatbot:
         self.decoder.eval()
         self.searcher = GreedySearchDecoder(self.encoder, self.decoder)
     
-    def chat_output(self, voc, input_str):
-        return evaluateInput(self.encoder, self.decoder, self.searcher, voc, input_str)
+    def chat_output(self, input_str):
+        return evaluateInput(self.encoder, self.decoder, self.searcher, self.voc, input_str)

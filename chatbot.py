@@ -5,10 +5,30 @@ import threading
 from authenticate import authentication 
 from history import chat_history
 from sentiment_analysis import sentiment_analysis
-from pender_chatbot.response_generator import response
+
+import torch
+from torch.jit import script, trace
+import torch.nn as nn
+from torch import optim
+import torch.nn.functional as F
+import csv
+import random
+import re
+import os
+import unicodedata
+import codecs
+from io import open
+import itertools
+import math
+import pickle
 
 import sys
 import argparse
+
+from seq2seq_chatbot.chatbot_class import chatbot as response
+
+USE_CUDA = torch.cuda.is_available()
+device = torch.device("cuda" if USE_CUDA else "cpu")
 
 class chatbot:
 
@@ -43,7 +63,7 @@ class chatbot:
 	def close_port(self):
 		self.s.close()
 
-def chat_session(chat_replies,emotion_model,args):
+def chat_session(sad_replies,emotion_model,args):
 # def chat_session(emotion_model,args):
 	jarvic=chatbot(args.host,args.port)
 	user_auth = authentication(args.mysqlpass)
@@ -107,7 +127,7 @@ def chat_session(chat_replies,emotion_model,args):
 		else:
 			emotion=emotion_model.predict_emotion(new_msg)
 			jarvic.send_msg(emotion)
-			reply=chat_replies.chat(msg)
+			reply=sad_replies.chat_output(input_str = new_msg)
 			# reply="lolwut"
 			jarvic.send_msg(reply)
 		hist.add_to_history(values[0],"c",reply)
@@ -118,14 +138,6 @@ if __name__ == '__main__':
 	# assert sys.version_info >= (3, 3), \
 	# "Must be run in Python 3.3 or later. You are running {}".format(sys.version)
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--save_dir', type=str, default='pender_chatbot/models/reddit',
-					   help='model directory to store checkpointed models')
-	parser.add_argument('-n', type=int, default=500)
-	parser.add_argument('--prime', type=str, default=' ')
-	parser.add_argument('--beam_width', type=int, default=2)
-	parser.add_argument('--temperature', type=float, default=1.0)
-	parser.add_argument('--topn', type=int, default=-1)
-	parser.add_argument('--relevance', type=float, default=-1.)
 	parser.add_argument('--host', type=str, default='127.0.0.1')
 	parser.add_argument('--port', type=int, default='2000')
 	parser.add_argument('--mysqlpass', type=str, default='software')
@@ -133,11 +145,13 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 
-	
-	chat_replies=response(args)
+	sad_replies = response(file_name="seq2seq_chatbot/preprocessing/data/input.txt",model_name = "new_model", corpus_name = 'sad', loadFilename = 'seq2seq_chatbot/models/new_model/sad/2-2_500/5600_checkpoint.tar')
+	# C.train(voc=voc, pairs = pairs, learning_rate = 0.0001, n_iterations = 10000,print_every = 1, save_every=100)
+	sad_replies.chat()
+
 	emotion_model=sentiment_analysis()
 	while(True):
-		chat_session(chat_replies,emotion_model,args)
+		chat_session(sad_replies,emotion_model,args)
 		# chat_session(emotion_model,args)
 	chat_replies.close_sess()
 	

@@ -19,7 +19,7 @@ import itertools
 import math
 import pickle
 
-from preprocessing.utils import *
+from seq2seq_chatbot.preprocessing.utils import *
 
 PAD_token = 0  # Used for padding short sentences
 SOS_token = 1  # Start-of-sentence token

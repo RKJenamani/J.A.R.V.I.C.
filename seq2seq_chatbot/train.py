@@ -1,8 +1,8 @@
-from preprocessing.utils import loadPrepareData, batch2TrainData
+from seq2seq_chatbot.preprocessing.utils import loadPrepareData, batch2TrainData
 import random
 import pickle
-from loss import maskNLLLoss
-from model.model import *
+from seq2seq_chatbot.loss import maskNLLLoss
+from seq2seq_chatbot.model.model import *
 import os
 
 # Load/Assemble voc and pairs
