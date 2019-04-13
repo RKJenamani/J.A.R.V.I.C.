@@ -14,9 +14,9 @@ import itertools
 import math
 import pickle
 
-from preprocessing.utils import loadPrepareData, batch2TrainData
+# from preprocessing.utils import loadPrepareData, batch2TrainData
 print("Hi")
-from chatbot_class import chatbot
+from seq2seq_chatbot.chatbot_class import chatbot
 
 PAD_token = 0  # Used for padding short sentences
 SOS_token = 1  # Start-of-sentence token
@@ -38,19 +38,19 @@ device = torch.device("cuda" if USE_CUDA else "cpu")
 # voc, _ = loadPrepareData("cornell", "cornell", "", "", pairs)
 
 
-save_dir = "preprocessing/data/"
-voc, pairs = loadPrepareData("imput.txt", "my_corpus", "preprocessing/data/input.txt", save_dir)
-# Print some pairs to validate
-print(len(pairs))
-print("\npairs:")
-for pair in pairs[:10]:
-    print(pair)
+# save_dir = "preprocessing/data/"
+# voc, pairs = loadPrepareData("imput.txt", "my_corpus", "preprocessing/data/input.txt", save_dir)
+# # Print some pairs to validate
+# print(len(pairs))
+# print("\npairs:")
+# for pair in pairs[:10]:
+#     print(pair)
 
 print("Vocs Loaded")
-C = chatbot(voc = voc, model_name = "new_model", corpus_name = 'sad', loadFilename = 'models/new_model/sad/2-2_500/5600_checkpoint.tar')
-# C.train(voc=voc, pairs = pairs, learning_rate = 0.0001, n_iterations = 10000,print_every = 1, save_every=100)
-C.chat()
-while True:
-    str = input('\n>')
-    s = C.chat_output(voc = voc, input_str = str)
-    print(s)
+C = chatbot(file_name = "preprocessing/data/happy/input.txt", model_name = "new_model", corpus_name = 'happy')
+C.train(learning_rate = 0.0001, n_iterations = 10000,print_every = 1, save_every=100)
+# C.chat()
+# while True:
+#     str = input('\n>')
+#     s = C.chat_output(voc = voc, input_str = str)
+#     print(s)

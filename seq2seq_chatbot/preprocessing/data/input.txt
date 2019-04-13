@@ -153,12 +153,6 @@ Oh. Hope he recovers. Stay by his side.
 Never ever let him feel weak. Support him and your mother in this plight.
 > I will do that.
 Pray to god for ihs early recovery.
-> Hey my parents are fighting.
-Donot interfere with them.
-> But they might sign a divorce. I am very sad about this.
-Just talk to you parents about this.
-> I did but they donot understand.
-Talk to your grandparents or someone elder. Ask them to solve the dispute.
 > Okay. I will do that.
 Donot worry thinking over this. It is very normal thing. Just focus on your studies. Talk to your freind.
 > Thanks for the advice.
@@ -213,20 +207,6 @@ Do they talk to you sometimes?
 Then why do you think they don't like you, if they do talk to you
 > Maybe I am a pessimist. I need to change my attitude.
 Yes
-> I am in a relationship and facing some serious issues.
-What are thiose. Please elaborate yourself.
-> I am still experiencing these anxieties about my partner’s loyalty to me. He was a very different few months ago. 
-Tell me if I got it wrong, but from how I understand it, you are anxious that your partner might be cheating on you. You have these anxieties because you feel that your partner has changed the way he treats you. You told me that he’s not that sweet anymore.
-> You are right,but he is busy most of the time, he is not texting you all the time or calling you every time, and he cheated on you once already. Am I correct?
-I will give you homework. Well, don’t worry, this is part of the program and this is not graded.
-> Haha. Okay. I never liked assignments in school.
-I want you to write down in a piece of paper what you like about your partner. I mean, everyday, write an act or what your partner did that day to make you happy. And if you are experiencing those anxieties again, write the reason or reasons why you experienced that and then read the other paper I told you to write. For every night, before you go to sleep, read the “anxiety” paper first and then the “sweetness” paper. As the day goes by, always start reading from the first day you began to write.
-> You think you can do that?
-Yes, I think I can handle that simple task. But wait, I’m not yet done. You told me awhile ago the reasons why you feel anxious, right? So I want you to write the possible reasons why you think your partner does that specific action. But Idon’t want you to write that you think he is with another girl. 
-> What you expect from me?
-Write a GOOD reason on why he does that. For example, he is busy. 
-> What might be the GOOD reason why he is busy? 
-Maybe he is doing some paper works? Or maybe he is taking care of his sister? Those kinds of reasons, don’t write something about his infidelity. Do you understand that?
 > Yes. Okay. I’ll try not to be anxious anymore. I’ll follow your instructions. I hope this can help me. Thank you so much.
 You’re welcome. I hope to see you next week.
 > I have serious mental problems. Life is not good.
@@ -245,4 +225,25 @@ Also make yourself sell to the corporate world.
 Learn proper presentation skills to enhance your chances.
 > What else?
 Be assertive. Be focused.
->
+>How are you?
+I am fine what about you?
+> I am ill
+Sorry to hear about that, did you visit a doctor?
+> I am not well
+Sorry to hear about that, did you visit a doctor?
+> No
+Its better if you do the same.
+> sad
+What happened?
+> I am feeling sad
+Why, what happened?
+> I need help.
+I am ready to help.
+> Could you help me?
+I will try my best
+> Help
+Sure
+> I am not feeling happy
+What happened, I am here to talk to you
+> How are you doing?
+Great, what about you?

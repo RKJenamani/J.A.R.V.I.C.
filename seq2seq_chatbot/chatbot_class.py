@@ -28,7 +28,7 @@ USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu")
 
 class chatbot:
-    def __init__(self, file_name, model_name, corpus_name, att_model='concat', hidden_size=500, encoder_n_layers=2, decoder_n_layers=2, dropout=0.1, batch_size=32, save_dir='models', loadFilename=None, checkpoint_iter=4000):
+    def __init__(self, file_name, model_name, corpus_name, att_model='concat', hidden_size=500, encoder_n_layers=2, decoder_n_layers=2, dropout=0.1, batch_size=32, save_dir='seq2seq_chatbot/models', loadFilename=None, checkpoint_iter=4000):
         self.model_name = model_name
         self.corpus_name = corpus_name
         self.attn_model = att_model
@@ -80,7 +80,7 @@ class chatbot:
         print('Models built and ready to go!')
         self.searcher = None
     
-    def train(self, voc, pairs, learning_rate, n_iterations, print_every, save_every, clip=50.0, teacher_forcing_ratio=1.0, decoder_learning_ratio=2.0):
+    def train(self,learning_rate, n_iterations, print_every, save_every, clip=50.0, teacher_forcing_ratio=1.0, decoder_learning_ratio=2.0):
 
         # Ensure dropout layers are in train mode
         self.encoder.train()
@@ -96,7 +96,7 @@ class chatbot:
 
         # Run training iterations
         print("Starting Training!")
-        trainIters(self.model_name, voc, pairs, self.encoder, self.decoder, encoder_optimizer, decoder_optimizer,
+        trainIters(self.model_name, self.voc, self.pairs, self.encoder, self.decoder, encoder_optimizer, decoder_optimizer,
                 self.embedding, self.encoder_n_layers, self.decoder_n_layers, self.save_dir, n_iterations, self.batch_size,
                 print_every, save_every, clip, self.corpus_name, self.loadFilename,teacher_forcing_ratio, self.hidden_size, self.checkpoint )
 
